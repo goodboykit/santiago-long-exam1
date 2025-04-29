@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = e => {
     e.preventDefault();
-    alert(`Logged in as ${email}`);
-    navigate('/');
+    alert(`Account created for ${email}`);
+    navigate('/login');
   };
 
   return (
     <div className="form-container">
-      <h1>Login</h1>
+      <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -30,10 +30,10 @@ const Login = () => {
           onChange={e => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Signup;
