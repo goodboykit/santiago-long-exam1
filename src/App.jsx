@@ -8,6 +8,7 @@ import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import { CartProvider } from './context/CartContext.jsx';
 
 const routes = [
   {
@@ -49,7 +50,11 @@ const routes = [
 const router = createBrowserRouter(routes);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
+  );
 }
 
 export default App;

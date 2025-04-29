@@ -1,51 +1,114 @@
 // src/pages/Cart.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaPlus, FaMinus } from 'react-icons/fa';
+import { useCart } from '../context/CartContext';
+
+const CartItem = ({ item, updateQuantity, removeItem }) => {
+  return (
+    <div className="cart-item">
+      <h3 className="cart-item-name">{item.name}</h3>
+      
+      <div className="cart-item-details">
+        <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
+        
+        <div className="cart-item-info">
+          <p className="cart-item-price">₱{item.price.toFixed(2)}</p>
+          
+          <div className="quantity-controls">
+            <button 
+              className="quantity-btn"
+              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+              disabled={item.quantity <= 1}
+            >
+              <FaMinus size={12} />
+            </button>
+            
+            <span className="quantity-value">{item.quantity}</span>
+            
+            <button 
+              className="quantity-btn"
+              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+            >
+              <FaPlus size={12} />
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button 
+        className="remove-btn"
+        onClick={() => removeItem(item.id)}
+      >
+        Remove
+      </button>
+    </div>
+  );
+};
 
 const Cart = () => {
-  // mock cart data – replace with real state later
-  const cartItems = [
-    {
-      id: 'u2',
-      name: 'Premium Blazer',
-      price: 49.99,
-      imageUrl:
-        'https://scontent.xx.fbcdn.net/...jpg',   // 180 × 180 or larger
-    },
-  ];
+  const navigate = useNavigate();
+  const { 
+    getCartWithDetails, 
+    updateQuantity, 
+    removeFromCart, 
+    cartTotal, 
+    checkout 
+  } = useCart();
+  
+  // Get cart items with full details
+  const cartItems = getCartWithDetails();
 
-  const handleRemove = id => alert(`Removed ${id}`);
-  const handleCheckout = () => alert('Proceed to checkout');
+  const handleCheckout = () => {
+    checkout();
+    alert('Order placed successfully!');
+    navigate('/profile');
+  };
 
   return (
-    <div className="profile-container">
-      <h1 className="page-heading">Your Cart</h1>
+    <div className="page-container">
+      <h1 className="cart-heading">Your Cart</h1>
 
-      {cartItems.length ? (
-        <>
-          <ul className="order-items">
-            {cartItems.map(item => (
-              <li key={item.id} className="order-item">
-                <img className="item-thumb" src={item.imageUrl} alt={item.name} />
-
-                <div className="item-details">
-                  <span className="item-name">{item.name}</span>
-                  <span className="item-price">₱{item.price.toFixed(2)}</span>
-                </div>
-
-                <button className="view-btn" onClick={() => handleRemove(item.id)}>
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          <button className="checkout-btn" onClick={handleCheckout}>
-            Checkout
-          </button>
-        </>
-      ) : (
-        <p className="no-items">Your cart is empty.</p>
-      )}
+      <div className="cart-content">
+        {cartItems.length > 0 ? (
+          <>
+            <div className="cart-items-container">
+              {cartItems.map(item => (
+                <CartItem 
+                  key={item.id} 
+                  item={item} 
+                  updateQuantity={updateQuantity}
+                  removeItem={removeFromCart}
+                />
+              ))}
+            </div>
+            
+            <div className="cart-summary">
+              <div className="cart-total">
+                <span className="total-label">Total:</span>
+                <span className="total-amount">₱{cartTotal.toFixed(2)}</span>
+              </div>
+              
+              <button 
+                className="checkout-button"
+                onClick={handleCheckout}
+              >
+                Checkout
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="empty-cart">
+            <p>Your cart is empty</p>
+            <button 
+              className="continue-shopping-btn"
+              onClick={() => navigate('/')}
+            >
+              Continue Shopping
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
