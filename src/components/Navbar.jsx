@@ -10,13 +10,12 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const { cartCount } = useCart();
   
-  // Check if user is logged in
   useEffect(() => {
     const savedUser = localStorage.getItem('nuUser');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
-  }, [location.pathname]); // Re-check when route changes
+  }, [location.pathname]); 
   
   const handleLogout = () => {
     localStorage.removeItem('nuUser');
@@ -24,7 +23,6 @@ const Navbar = () => {
     navigate('/login');
   };
   
-  // Helper function to check if a link is active
   const isActive = (path) => {
     if (path === '/') {
       return location.pathname === '/';

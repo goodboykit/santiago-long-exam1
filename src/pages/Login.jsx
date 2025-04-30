@@ -14,7 +14,7 @@ const Login = () => {
     
     // Store user information in localStorage
     const userInfo = {
-      name: email.split('@')[0], // Using email as name
+      name: email.split('@')[0], 
       email: email,
       joined: 'April 30, 2025'
     };
